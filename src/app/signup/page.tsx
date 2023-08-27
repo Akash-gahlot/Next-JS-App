@@ -24,32 +24,25 @@ export default function SignupPage() {
             if (response.status == 201) { 
                 //setloading(false);
                 router.push("/login");
-                toast('Signup Successfull , Now Login Plz.. ', {autoClose: 3000, type: 'success' })
+                toast('Signup Successfull , Now Login Plz.. ', {autoClose: 2000, type: 'success' })
             }
-            if (response.status == 403) {
+            else if (response.status == 200) {
                 setloading(false);
                 setbuttonDisable(false);
-                console.log("message 403: "+response.data.message);
-                console.log(response.data);
-                toast(response.data.message, { autoClose: 3000, type: 'error' });
-                return;
-            }
-            if (response.status == 500) { 
-                setloading(false);
-                setbuttonDisable(false);
-                 console.log("message 500 : "); 
-                toast(response.data.message, { autoClose: 3000, type: 'error' })
-            }
-
+                toast(response.data.message, { autoClose: 2000, type: 'error' });
+            }            
         } catch (err:any) { 
             setloading(false);
-            setbuttonDisable(false);
-             console.log("message catch: ");         
-            toast(err.message, { autoClose: 3000, type: 'error' })            
+            setbuttonDisable(false);            
+            toast(err.message, { autoClose: 2000, type: 'error' })            
         } 
+        // finally { 
+        //      setloading(false);
+        //     setbuttonDisable(false);
+        // }
     }    
     useEffect(() => {
-        if (user.username.length >= 3) { 
+        if (user.username.length >= 3  && user.password) { 
             setbuttonDisable(false);
         }
         if (!user.username || !user.email || !user.password) { 
