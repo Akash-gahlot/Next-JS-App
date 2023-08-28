@@ -23,7 +23,6 @@ export default function LoginPage() {
             if (response.status == 201) {   
                 setloading(false);
                 setloginDisable(false); 
-                console.log(response.data.message);
                 toast(response.data.message, { autoClose: 2000, type: "warning" });              
             }
             else if (response.status == 200) {
