@@ -10,6 +10,7 @@ import axios from 'axios';
 const SECRET_KEY = "NEXTJWT";
 import { toast } from 'react-toastify';
 import { error } from 'console';
+import { useRouter } from 'next/navigation';
 
 
 
@@ -125,36 +126,61 @@ import { error } from 'console';
 //   )
 // }
 export default function Home() { 
+  const router = useRouter();
   const [id, setid] = React.useState("");
+  const [loading, setloading] = React.useState(true);
   const [profileDisable, setprofileDisable] = React.useState(false);
   async function gettoken() { 
     try {
       const response = await axios.get("/api/helpers");     
       setid(response.data.message.id);
+      setloading(false);
     }
     catch (err: any) { 
       toast("Login to view Profile!", { autoClose: 2000, type: "info" });
+      setloading(false);
     }
+  }
+  async function logout() { 
+    try {
+      const response = await axios.get("api/users/logout")
+      if (response.status == 200) {
+        console.log("logout success");
+        router.push("/login");
+        toast("Successfull Logout", { autoClose: 2000, type: "success" });
+      }
+    }
+    catch (err:any) {
+      console.log("logout Unsuccessfull");
+      toast("Logout Unsuccessfull", { autoClose: 2000, type: "error" });
+    }     
   }
   useEffect(() => {
     gettoken();
-   }, []);
-    return (
+   }, [id]);
+  return (
+  
        <div className="text-center">
             <h1>Welcome to Next JS App</h1>
             <br />
-        <br />
-        {id ? (<Link href={`/profile/${id}`}>My Profile</Link>) : (
+      <br />
+      {loading ? (<h1>Loading...</h1>) : (<div>
+        {id ? ( <div><Link href={`/profile/${id}`}>My Profile</Link>
+         <br />
+             <br/>
+          <Link href="#" onClick={logout} >Logout</Link>
+          </div>) : (
           <div>
               <br />
              <br/>
-            <Link href="/login">Login</Link>
-            </div>
-        )
-        }              
+            <Link href="/login">Login</Link>                              
              <br />
              <br/>
-            <Link href="/signup" >Signup</Link>
+              <Link href="/signup" >Signup</Link>
+               </div>
+            )
+        }          
+      </div>)}
         
         </div>
     )

@@ -9,15 +9,14 @@ export default async function middleware1(request: NextRequest) {
             ? path.startsWith(matcher.slice(0, -1)) 
             : path === matcher
     );  
-    console.log("not found value : " + notFoundPath);
     const token = request.cookies.get("token")?.value || "";
     if (publicPath && token) { 
         return NextResponse.redirect(new URL('/', request.nextUrl));
     }
-    else if (notFoundPath || path === "/custom404") {
-         return NextResponse.redirect(new URL('/custom404', request.nextUrl));
+    // else if (notFoundPath || path === "/custom404") {
+    //      return NextResponse.redirect(new URL('/custom404', request.nextUrl));
   
-    }
+    // }
 }
 export const config = {
     matcher: ["/", "/profile/:path*", "/login", "/signup"]
