@@ -2,8 +2,11 @@ import { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 export default async function middleware1(request: NextRequest) { 
-    const path = request.nextUrl.pathname;    
+    const path = request.nextUrl.pathname; 
     const publicPath = path === "/login" || path === "/signup";
+    const profilePattern = /^\/profile\/[^/]*$/;
+     // Test if the path matches the pattern
+     const isProfilePath = profilePattern.test(path); 
      const notFoundPath = !config.matcher.some(matcher => 
         matcher.endsWith("*") 
             ? path.startsWith(matcher.slice(0, -1)) 
@@ -13,6 +16,10 @@ export default async function middleware1(request: NextRequest) {
     if (publicPath && token) { 
         return NextResponse.redirect(new URL('/', request.nextUrl));
     }
+    if (isProfilePath && !token) { 
+        return NextResponse.redirect(new URL('/', request.nextUrl));
+    }
+    
     // else if (notFoundPath || path === "/custom404") {
     //      return NextResponse.redirect(new URL('/custom404', request.nextUrl));
   
